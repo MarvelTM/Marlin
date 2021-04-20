@@ -1,0 +1,50 @@
+#
+# builds.yml
+# Do test builds to catch compile errors
+#
+
+name: Build for Ender-3 pro (BigTreeTech SKR Mini E3 1.2)
+
+on:
+  pull_request:
+    branches:
+    - MarvelTM/2.0.x
+  push:
+    branches:
+    - MarvelTM/2.0.x
+
+
+jobs:
+  test_builds:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Select Python 3.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: '3.7' # Version range or exact version of a Python version to use, using semvers version range syntax.
+        architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+
+    - name: Install PlatformIO
+      run: |
+        pip install -U https://github.com/platformio/platformio-core/archive/develop.zip
+        platformio update
+
+    - name: Check out the PR
+      uses: actions/checkout@v2
+
+    - name: Build Example 
+      run: | 
+        chmod +x buildroot/bin/*
+        chmod +x buildroot/tests/*
+        chmod +x buildroot/build/*
+        export PATH=./buildroot/bin/:./buildroot/tests/:./buildroot/build/:${PATH}
+        build_ender3_pro_skr_mini_e3_1_2
+
+    - name: Create Release
+      uses: actions/upload-artifact@v2
+      with:
+        name: firmware.bin
+        path: .pio/build/STM32F103RC_btt_512K/firmware.bin

@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+#
+# build_ender3_pro_skr_mini_e3_1_2
+#
+# Usage: build_ender3_pro_skr_mini_e3_1_2 internal config-home config-folder
+#
+
+GITREPO=https://github.com/MarlinFirmware/Configurations.git
+BRANCH="release-2.0.7.2"
+
+# Create a temporary folder inside .pio
+TMP=./.pio/build-$BRANCH
+[[ -d "$TMP" ]] || mkdir -p $TMP
+
+# Download Configurations into the temporary folder
+if [[ ! -e "$TMP/README.md" ]]; then
+  echo "Downloading Configurations from GitHub into $TMP"
+  git clone --depth=1 --single-branch --branch "$BRANCH" $GITREPO "$TMP" || { echo "Failed to clone the configuration repository"; exit ; }
+else
+  echo "Using previously downloaded Configurations at $TMP"
+fi
+
+echo "Testing:"
+SUB=$TMP"/config/examples/Creality/Ender-3 Pro/BigTreeTech SKR Mini E3 1.2/"
+[[ -d "$SUB" ]] || { echo "$SUB is not a good path" ; exit 1 ; }
+
+compgen -G "${SUB}Con*.h" > /dev/null || { echo "No configuration files found in $SUB" ; exit 1 ; }
+
+echo "Getting configuration files from $SUB"
+cp "$TMP/config/default"/*.h    Marlin/
+cp "$SUB"/Configuration.h     Marlin/ 2>/dev/null
+cp "$SUB"/Configuration_adv.h Marlin/ 2>/dev/null
+cp "$SUB"/_Bootscreen.h       Marlin/ 2>/dev/null
+cp "$SUB"/_Statusscreen.h     Marlin/ 2>/dev/null
+
+opt_set DEFAULT_AXIS_STEPS_PER_UNIT '{ 80, 80, 400, 136.5 }' NOZZLE_TO_PROBE_OFFSET '{ -44, -8, -1.70 }'
+opt_enable BLTOUCH AUTO_BED_LEVELING_BILINEAR Z_SAFE_HOMING CUSTOM_STATUS_SCREEN_IMAGE BINARY_FILE_TRANSFER
+opt_disable MESH_BED_LEVELING SDCARD_READONLY 
+
+echo "Building the firmware now..."
+pio run -s -e STM32F103RC_btt_512K 
+echo "Success"
