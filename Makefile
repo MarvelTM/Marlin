@@ -20,6 +20,14 @@ help:
 	@echo "                       THIS WILL UNDO ANY CHANGES YOU'VE MADE!"
 .PHONY: help
 
+build_example:
+	export GIT_RESET_HARD=true
+	export PATH=./buildroot/bin/:./buildroot/tests/:./buildroot/build/:${PATH} \
+	  && export VERBOSE_PLATFORMIO=$(VERBOSE_PLATFORMIO) \
+	  && chmod +x ./buildroot/bin/build_example_Ender3 \
+ 	  && build_example_Ender3
+.PHONY: build_example 
+
 tests-single-ci:
 	export GIT_RESET_HARD=true
 	$(MAKE) tests-single-local TEST_TARGET=$(TEST_TARGET)

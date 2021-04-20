@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+#
+# build_example_Ender3
+#
+# Usage: build_example_Ender3 internal config-home config-folder
+#
+
+GITREPO=https://github.com/MarlinFirmware/Configurations.git
+BRANCH="import-2.0.x"
+
+# Create a temporary folder inside .pio
+TMP=./.pio/build-$BRANCH
+[[ -d "$TMP" ]] || mkdir -p $TMP
+
+# Download Configurations into the temporary folder
+if [[ ! -e "$TMP/README.md" ]]; then
+  echo "Downloading Configurations from GitHub into $TMP"
+  git clone --depth=1 --single-branch --branch "$BRANCH" $GITREPO "$TMP" || { echo "Failed to clone the configuration repository"; exit ; }
+else
+  echo "Using previously downloaded Configurations at $TMP"
+fi
+
+echo "Testing:"
+SUB=$TMP"/config/examples/Creality/Ender-3 Pro/BigTreeTech SKR Mini E3 1.2/"
+[[ -d "$SUB" ]] || { echo "$SUB is not a good path" ; exit 1 ; }
+
+compgen -G "${SUB}Con*.h" > /dev/null || { echo "No configuration files found in $SUB" ; exit 1 ; }
+
+echo "Getting configuration files from $SUB"
+cp "$2/config/default"/*.h    Marlin/
+cp "$SUB"/Configuration.h     Marlin/ 2>/dev/null
+cp "$SUB"/Configuration_adv.h Marlin/ 2>/dev/null
+cp "$SUB"/_Bootscreen.h       Marlin/ 2>/dev/null
+cp "$SUB"/_Statusscreen.h     Marlin/ 2>/dev/null
+
+echo "Building the firmware now..."
+HERE=`dirname "$0"`
+$HERE/mftest -a -n1 || { echo "Failed"; exit 1; }
+
+echo "Success"

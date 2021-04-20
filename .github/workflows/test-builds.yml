@@ -19,19 +19,6 @@ jobs:
     name: Run All Tests
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        test-platform:
-        # STM32F1 (Maple) Environments
-
-        - STM32F103RC_btt
-        #- STM32F103RC_btt_USB
-        #- STM32F103RE_btt
-        #- STM32F103RE_btt_USB
-        #- STM32F103RC_fysetc
-        #- STM32F103RC_meeb
-       
-
     steps:
 
     - name: Select Python 3.7
@@ -48,6 +35,6 @@ jobs:
     - name: Check out the PR
       uses: actions/checkout@v2
 
-    - name: Run ${{ matrix.test-platform }} Tests
-      run: |
-        make tests-single-ci TEST_TARGET=${{ matrix.test-platform }} VERBOSE_PLATFORMIO=3
+    - name: Build Example 
+      run: | 
+        make build_example
