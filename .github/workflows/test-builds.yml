@@ -44,7 +44,7 @@ jobs:
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: .pio/build/STM32F103RC_btt/firmware.bin
-        asset_name: firmware
+        asset_name: firmware.bin
         tag: ${{ github.ref }}
         overwrite: true
         body: "This is my release text"
