@@ -27,11 +27,15 @@ SUB=$TMP"/config/examples/Creality/Ender-3 Pro/BigTreeTech SKR Mini E3 1.2/"
 compgen -G "${SUB}Con*.h" > /dev/null || { echo "No configuration files found in $SUB" ; exit 1 ; }
 
 echo "Getting configuration files from $SUB"
-cp "$2/config/default"/*.h    Marlin/
+cp "$TMP/config/default"/*.h    Marlin/
 cp "$SUB"/Configuration.h     Marlin/ 2>/dev/null
 cp "$SUB"/Configuration_adv.h Marlin/ 2>/dev/null
 cp "$SUB"/_Bootscreen.h       Marlin/ 2>/dev/null
 cp "$SUB"/_Statusscreen.h     Marlin/ 2>/dev/null
+
+opt_set DEFAULT_AXIS_STEPS_PER_UNIT { 80, 80, 400, 136.5 } NOZZLE_TO_PROBE_OFFSET { -44, -8, -1.70 }
+opt_enable BLTOUCH AUTO_BED_LEVELING_BILINEAR
+opt_disable MESH_BED_LEVELING
 
 echo "Building the firmware now..."
 HERE=`dirname "$0"`
