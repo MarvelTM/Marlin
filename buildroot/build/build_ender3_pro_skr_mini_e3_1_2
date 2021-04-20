@@ -33,7 +33,8 @@ cp "$SUB"/Configuration_adv.h Marlin/ 2>/dev/null
 cp "$SUB"/_Bootscreen.h       Marlin/ 2>/dev/null
 cp "$SUB"/_Statusscreen.h     Marlin/ 2>/dev/null
 
-opt_set DEFAULT_AXIS_STEPS_PER_UNIT '{ 80, 80, 400, 136.5 }' NOZZLE_TO_PROBE_OFFSET '{ -44, -8, -1.70 }'
+opt_set DEFAULT_AXIS_STEPS_PER_UNIT '{ 80, 80, 400, 136.5 }' 
+opt_set NOZZLE_TO_PROBE_OFFSET '{ -44, -8, -1.70 }'
 opt_enable BLTOUCH AUTO_BED_LEVELING_BILINEAR Z_SAFE_HOMING CUSTOM_STATUS_SCREEN_IMAGE BINARY_FILE_TRANSFER
 opt_disable MESH_BED_LEVELING SDCARD_READONLY 
 
