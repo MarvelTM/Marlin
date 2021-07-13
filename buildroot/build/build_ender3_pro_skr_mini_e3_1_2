@@ -6,7 +6,7 @@
 #
 
 GITREPO=https://github.com/MarlinFirmware/Configurations.git
-BRANCH="release-2.0.7.2"
+BRANCH="release-2.0.9.1"
 
 # Create a temporary folder inside .pio
 TMP=./.pio/build-$BRANCH
