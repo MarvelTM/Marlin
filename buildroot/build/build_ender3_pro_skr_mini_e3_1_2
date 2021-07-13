@@ -39,5 +39,5 @@ opt_enable BLTOUCH AUTO_BED_LEVELING_BILINEAR Z_SAFE_HOMING CUSTOM_STATUS_SCREEN
 opt_disable MESH_BED_LEVELING SDCARD_READONLY 
 
 echo "Building the firmware now..."
-pio run -s -e STM32F103RC_btt_512K 
+pio run -s -e STM32F103RC_btt
 echo "Success"
